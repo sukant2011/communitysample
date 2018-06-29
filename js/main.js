@@ -20,8 +20,18 @@ document.onreadystatechange = function () {
 		
 		$('.ndLists li').click(function(){
 			$('#geoVal').val($(this).attr('data-val'));	
-			$('#searchByProperty').trigger('click');
 		});
+		
+		$('.btn.btn-alert').click(function(){
+			if($('#geoVal').val()==''){
+				alert('Please choose any of them to see the community data');
+				return false;
+			}else{
+				$('#searchByProperty').trigger('click');
+			}
+								
+		});
+		
 		
 		$(".dropdown-menu li a").click(function(){
 		  $(".btn:first-child").text($(this).text());

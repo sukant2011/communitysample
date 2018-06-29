@@ -101,7 +101,7 @@
 					</div>
 				<?php } ?>
 				
-				<div class="col-md-8 col-xs-12 mt-30 <?php echo $nodataFound; ?>" <?php echo($popup==true?'style="display:none;"':'') ?>>
+				<div class="col-md-7 col-xs-12 mt-30 <?php echo $nodataFound; ?>" <?php echo($popup==true?'style="display:none;"':'') ?>>
 					
 
 					<div class="col-xs-12 mt-30 map" id="map">
@@ -147,7 +147,7 @@ Department of Housing and Urban Development (HUD).<br></p>
 											<img src="images/icon-stat.png" alt="">
 											<h2>Highest education<br>level attained</h2>
 											<h3>Info</h3>
-											<p>Lorem ipsum dolor sit amet, consectetur<br>adipiscing elit. Mauris nec odio.</p>
+											<p>The highest education level attained is based on the percentage of eligible graduates within the given population who have achieved the level of education listed.</p>
 											<div class="gap20"></div>
 											
 											<div class="list-row">
@@ -190,7 +190,7 @@ Department of Housing and Urban Development (HUD).<br></p>
 				<!-- Swiper -->
 				<script src="js/main.js"></script>
 				<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPAVKxutIiPNXJr8UeB2wwSrzrFA3-GuI&libraries=places&callback=initAutocomplete"></script>
-				<div class="col-md-4 col-xs-12 col-xs-12 mt-30 <?php echo $nodataFound; ?>" id="communityContent" <?php echo($popup==true?'style="display:none;"':'') ?>>
+				<div class="col-md-5 col-xs-12 col-xs-12 mt-30 <?php echo $nodataFound; ?>" id="communityContent" <?php echo($popup==true?'style="display:none;"':'') ?>>
 					
 					<h2 class="ageDemo mt-30">Housing Inventory</h2>
 					<div class="chart_bar" style="position: relative; margin:0 auto;width:80%; height:150px;" >	
@@ -200,13 +200,17 @@ Department of Housing and Urban Development (HUD).<br></p>
 
 				
 					<h2 class="ageDemo mt-30">Age Demographics</h2>
-					<div class="chart_bar" style="position: relative;height:150px;" >	
-						<div id="chart-2" ></div> 
+					<div class="chart_bar" style="position: relative;height:180px;" >
+						<p class="ageYaxis">Population</p>
+						<div id="chart-2" ></div>
+						<p class="ageXaxis">Age</p>
 					</div> 
 					
 					<h2 class="ageDemo mt-30">Income by Households</h2>
+					<span style="font-size:12px;float:left;margin-bottom:20px;">Move information to the grid lines to show the numbers on each axis</span>
 					<div class="chart_bar" style="position: relative;height:150px;" >	
-						<div id="chartincomediv"> </div> 
+						<!--<div id="chartincomediv"> </div> -->
+						<canvas id="myChart"></canvas>
 					</div> 
 				</div>
     </div>
@@ -226,6 +230,10 @@ Department of Housing and Urban Development (HUD).<br></p>
 				<li data-val="<?php echo $geoVal; ?>"><label><input type="radio" name="geoVal" value="<?php echo $geoVal; ?>"><?php echo $geoValName[$geoVal]; ?></label></li>
 				<?php } ?>
 			</ul>
+			<div class="neighBtn text-center">
+				<button class="btn btn-alert">Search Neighborhood</button>
+			</div>
+			
 		  </div>
 		 
 		</div>
@@ -316,23 +324,23 @@ function init() {
 <script type='text/javascript' src="js/jqgraph.js"></script>
 <script type="text/javascript">
 arrayOfData2 = new Array(
-	 [<?php echo $communityData['AGE00_04'] ?>],
-   	 [<?php echo $communityData['AGE05_09'] ?>],
-	 [<?php echo $communityData['AGE10_14'] ?>],
-   	 [<?php echo $communityData['AGE15_19'] ?>],
-	 [<?php echo $communityData['AGE20_24'] ?>],
-   	 [<?php echo $communityData['AGE25_29'] ?>],
-	 [<?php echo $communityData['AGE30_34'] ?>],
-   	 [<?php echo $communityData['AGE35_39'] ?>],
-	 [<?php echo $communityData['AGE40_44'] ?>],
-   	 [<?php echo $communityData['AGE45_49'] ?>],
-	 [<?php echo $communityData['AGE50_54'] ?>],
-   	 [<?php echo $communityData['AGE55_59'] ?>],
-	 [<?php echo $communityData['AGE60_64'] ?>],
-   	 [<?php echo $communityData['AGE65_69'] ?>],
-	 [<?php echo $communityData['AGE70_74'] ?>],
-   	 [<?php echo $communityData['AGE75_79'] ?>],
-	 [<?php echo $communityData['AGE80_84'] ?>]
+	 [<?php echo $communityData['AGE00_04'] ?>,'0-4'],
+   	 [<?php echo $communityData['AGE05_09'] ?>,'5-9'],
+	 [<?php echo $communityData['AGE10_14'] ?>,'10-14'],
+   	 [<?php echo $communityData['AGE15_19'] ?>,'15-19'],
+	 [<?php echo $communityData['AGE20_24'] ?>,'20-24'],
+   	 [<?php echo $communityData['AGE25_29'] ?>,'25-29'],
+	 [<?php echo $communityData['AGE30_34'] ?>,'30-34'],
+   	 [<?php echo $communityData['AGE35_39'] ?>,'35-39'],
+	 [<?php echo $communityData['AGE40_44'] ?>,'40-44'],
+   	 [<?php echo $communityData['AGE45_49'] ?>,'45-49'],
+	 [<?php echo $communityData['AGE50_54'] ?>,'50-54'],
+   	 [<?php echo $communityData['AGE55_59'] ?>,'55-59'],
+	 [<?php echo $communityData['AGE60_64'] ?>,'60-64'],
+   	 [<?php echo $communityData['AGE65_69'] ?>,'65-69'],
+	 [<?php echo $communityData['AGE70_74'] ?>,'70-74'],
+   	 [<?php echo $communityData['AGE75_79'] ?>,'75-79'],
+	 [<?php echo $communityData['AGE80_84'] ?>,'80-84']
 );	
 
 
@@ -342,7 +350,8 @@ $('#chart-2').jqbargraph({
    legends: ['Male','Female'],
    legend: false,
    height: 150,
-   barSpace: 12
+   barSpace: 10,
+   width:500
 });
 
  </script>	
@@ -350,7 +359,6 @@ $('#chart-2').jqbargraph({
 <!-- Resources -->
 <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
 <script src="https://www.amcharts.com/lib/3/pie.js"></script>
-<script src="https://www.amcharts.com/lib/3/xy.js"></script>
 <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
 <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
 <script src="https://www.amcharts.com/lib/3/themes/light.js"></script> 
@@ -395,168 +403,69 @@ var mychart = AmCharts.makeChart( "chart-1", {
 </style>
 
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
 
 <!-- Chart code -->
 <script>
-var chart = AmCharts.makeChart("chartincomediv", {
-  "type": "xy",
-  "theme": "light",
-  "marginRight": 80,
-  "dataDateFormat": "YYYY-MM-DD",
-  "startDuration": 1.5,
-  "trendLines": [],
-  "balloon": {
-    "adjustBorderColor": false,
-    "shadowAlpha": 0,
-    "fixedPosition": true
-  },
-  "graphs": [{
-    "balloonText": "<div style='margin:5px;'><b>[[y]]</b></div>",
-    "bullet": "diamond",
-    "maxBulletSize": 25,
-    "lineAlpha": 0.8,
-    "lineThickness": 2,
-    "lineColor": "#0051FF",
-    "fillAlphas": 0,
-    "xField": "date",
-    "yField": "ay",
-    "valueField": "aValue"
-  }],
-  "valueAxes": [{
-    "id": "ValueAxis-1",
-    "axisAlpha": 0,
-	"labelsEnabled": false,
-	"title": "Number of Households"
-  }, {
-    "id": "ValueAxis-2",
-    "axisAlpha": 0,
-    "position": "bottom",
-	"labelsEnabled": false,
-	"title": "Annual Income"
-	
-  }],
-  "allLabels": [],
-  "titles": [],
-  "dataProvider": [{
-    "date": 1,
-    "ay": <?php echo $communityData['HINCY00_10']; ?>,
-    "by": 2.2,
-    "aValue": 15,
-    "bValue": 10
-  }, {
-    "date": 2,
-    "ay": <?php echo $communityData['HINCY10_15']; ?>,
-    "by": 4.9,
-    "aValue": 8,
-    "bValue": 3
-  }, {
-    "date": 3,
-    "ay": <?php echo $communityData['HINCY15_20']; ?>,
-    "by": 5.1,
-    "aValue": 16,
-    "bValue": 4
-  }, {
-    "date": 5,
-    "ay": <?php echo $communityData['HINCY20_25']; ?>,
-    "aValue": 9
-  }, {
-    "date": 7,
-    "by": <?php echo $communityData['HINCY25_30']; ?>,
-    "bValue": 13
-  }, {
-    "date": 10,
-    "ay": <?php echo $communityData['HINCY30_35']; ?>,
-    "by": 13.3,
-    "aValue": 9,
-    "bValue": 13
-  }, {
-    "date": 12,
-    "ay": <?php echo $communityData['HINCY35_40']; ?>,
-    "by": 6.1,
-    "aValue": 5,
-    "bValue": 2
-  }, {
-    "date": 13,
-    "ay": <?php echo $communityData['HINCY40_45']; ?>,
-    "aValue": 10
-  }, {
-    "date": 15,
-    "ay": <?php echo $communityData['HINCY45_50']; ?>,
-    "by": 10.5,
-    "aValue": 3,
-    "bValue": 10
-  }, {
-    "date": 16,
-    "ay": <?php echo $communityData['HINCY50_60']; ?>,
-    "by": 12.3,
-    "aValue": 5,
-    "bValue": 13
-  }, {
-    "date": 20,
-	"ay":<?php echo $communityData['HINCY60_75']; ?>,
-    "by": 4.5,
-    "bValue": 11
-  }, {
-    "date": 22,
-    "ay": <?php echo $communityData['HINCY75_100']; ?>,
-    "by": 15,
-    "aValue": 15,
-    "bValue": 10
-  }, {
-    "date": 23,
-    "ay": <?php echo $communityData['HINCY100_125']; ?>,
-    "by": 10.8,
-    "aValue": 1,
-    "bValue": 11
-  }, {
-    "date": 24,
-    "ay": <?php echo $communityData['HINCY125_150']; ?>,
-    "by": 19,
-    "aValue": 12,
-    "bValue": 3
-  }, {
-    "date": 23,
-    "ay": <?php echo $communityData['HINCY150_200']; ?>,
-    "by": 10.8,
-    "aValue": 1,
-    "bValue": 11
-  }, {
-    "date": 24,
-    "ay": <?php echo $communityData['HINCY200_250']; ?>,
-    "by": 19,
-    "aValue": 12,
-    "bValue": 3
-  }, {
-    "date": 23,
-    "ay": <?php echo $communityData['HINCY250_500']; ?>,
-    "by": 10.8,
-    "aValue": 1,
-    "bValue": 11
-  }, {
-    "date": 24,
-    "ay": <?php echo $communityData['HINCYGT_500']; ?>,
-    "by": 19,
-    "aValue": 12,
-    "bValue": 3
-  }],
 
-  "export": {
-    "enabled": false
-  },
+var ctx = document.getElementById('myChart').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
 
-  "chartScrollbar": {
-    "offset": 15,
-    "scrollbarHeight": 5
-  },
-  "chartCursor": {
-    "pan": false,
-    "cursorAlpha": 0,
-    "valueLineAlpha": 0
-  }
+    // The data for our dataset
+    data: {
+        labels: ["<10K", "10K-15K", "15K-20K", "20K-25K", "25K-30K", "30K-35K", "35K-40K", "40K-45K", "45K-50K", "50K-60K", "60K-75K", "75K-100K", "100K-125K", "125K-150K", "150K-200K", "200K-250K", "250K-500K", ">500K"],
+        datasets: [{
+            label: "",
+            //backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(0, 81, 255)',
+            data: [<?php echo $communityData['HINCY00_10']; ?>, <?php echo $communityData['HINCY10_15']; ?>, <?php echo $communityData['HINCY15_20']; ?>, <?php echo $communityData['HINCY20_25']; ?>, <?php echo $communityData['HINCY25_30']; ?>, <?php echo $communityData['HINCY30_35']; ?>, <?php echo $communityData['HINCY35_40']; ?>,<?php echo $communityData['HINCY40_45']; ?>, <?php echo $communityData['HINCY45_50']; ?>, <?php echo $communityData['HINCY50_60']; ?>, <?php echo $communityData['HINCY60_75']; ?>, <?php echo $communityData['HINCY75_100']; ?>, <?php echo $communityData['HINCY100_125']; ?>, <?php echo $communityData['HINCY125_150']; ?>, <?php echo $communityData['HINCY150_200']; ?>, <?php echo $communityData['HINCY200_250']; ?>, <?php echo $communityData['HINCY250_500']; ?>,<?php echo $communityData['HINCYGT_500']; ?>],
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+				responsive: true,
+				legend: {
+					display:false
+				},
+				title: {
+					display: false,
+					text: 'Chart.js Line Chart'
+				},
+				tooltips: {
+					mode: 'index',
+					intersect: false,
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: true
+				},
+				scales: {
+					xAxes: [{
+						
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Annual Income',
+							fontColor: 'black'
+						}
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Number of Households',
+							fontColor: 'black'
+						}
+					}]
+				}
+			}
 });
-</script>							
+
+</script>						
 
 		<style>
 		.noshow{display:none;}
@@ -622,6 +531,41 @@ var chart = AmCharts.makeChart("chartincomediv", {
 .ageDemo {
     font-size: 24px;
     margin-bottom:20px;
+}
+	.ageYaxis{
+		-webkit-transform: rotate(270deg);
+		-webkit-transform-origin: left bottom;
+		transform: rotate(270deg);
+		transform-origin: left bottom;
+		-mz-transform: rotate(270deg);
+		-moz-transform: rotate(270deg);
+		-mz-transform-origin: left bottom;
+		-moz-transform-origin: left bottom;
+		display: inline-block;
+		position: absolute;
+		bottom: 40px;
+		color:#000;
+		font-weight:bold;
+	}
+	.ageXaxis{
+		text-align: center;
+		display: inline-block;
+		width: 100%;
+		color: #000;
+		margin-top: 10px;
+		font-weight: bold;
+	}
+	.graphLabelchart-2 {
+    font-size: 10px;
+    position: absolute;
+    width: 27px;
+    text-align: left;
+}
+button.btn.btn-alert {
+    background-color: #333;
+    margin-top: 15px;
+	font-size:14px;	
+
 }
 		</style>
 	</body>
